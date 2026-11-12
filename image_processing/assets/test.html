@@ -1,0 +1,32 @@
+<!DOCTYPE html><html><body style="font-family:sans-serif">
+<h3>Zoom 4x4 to 320x320: nearest neighbor (left) vs bilinear (right)</h3>
+<canvas id="a" width="320" height="320"></canvas>
+<canvas id="b" width="320" height="320"></canvas>
+<script>
+const small = [ [10, 50, 200, 120],
+                [30, 90, 255,  60],
+                [0, 180,  40, 220],
+                [100, 20, 150, 80] ];      // the 4x4 image, values 0..255
+const N = 4, BIG = 320;
+function draw(id, bilinear){
+  const ctx = document.getElementById(id).getContext('2d');
+  const img = ctx.createImageData(BIG, BIG);
+  for (let r = 0; r < BIG; r++) for (let c = 0; c < BIG; c++){
+    const x = r / (BIG - 1) * (N - 1), y = c / (BIG - 1) * (N - 1);  // position in small image
+    let v;
+    if (!bilinear) v = small[Math.round(x)][Math.round(y)];         // copy closest pixel
+    else {
+      const x0 = Math.min(Math.floor(x), N - 2), y0 = Math.min(Math.floor(y), N - 2);
+      const tx = x - x0, ty = y - y0;
+      const top = small[x0][y0]   + ty * (small[x0][y0+1]   - small[x0][y0]);    // step 1
+      const bot = small[x0+1][y0] + ty * (small[x0+1][y0+1] - small[x0+1][y0]);  // step 2
+      v = top + tx * (bot - top);                                                // step 3
+    }
+    const p = 4 * (r * BIG + c);
+    img.data[p] = img.data[p+1] = img.data[p+2] = v; img.data[p+3] = 255;
+  }
+  ctx.putImageData(img, 0, 0);
+}
+draw('a', false); draw('b', true);
+</script></body></html>
+
