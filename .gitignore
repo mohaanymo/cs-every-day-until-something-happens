@@ -4,3 +4,4 @@ build/
 log.md
 a.out
 computre_architicture/basic_cpu_emulator/cpu
+.gitignore
