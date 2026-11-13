@@ -1,6 +1,6 @@
 # What is a digital image
 
-It's 2D array, each slot (pixel) in that array is just some 0,1 data that emphasizes colors,
+It's 2D array, each slot (pixel) in that array is just binary data that represents brightness or color.
 in a greyscale image that pixel is only one number
 0 => black
 255 => white
