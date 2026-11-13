@@ -1,4 +1,0 @@
-/home/mohamed/Desktop/CS/image_processing/image-engine/build/CMakeFiles/glad.dir
-/home/mohamed/Desktop/CS/image_processing/image-engine/build/CMakeFiles/image-engine.dir
-/home/mohamed/Desktop/CS/image_processing/image-engine/build/CMakeFiles/edit_cache.dir
-/home/mohamed/Desktop/CS/image_processing/image-engine/build/CMakeFiles/rebuild_cache.dir
