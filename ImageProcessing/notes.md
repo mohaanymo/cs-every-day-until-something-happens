@@ -153,7 +153,7 @@ $$
 4- Contrast stretching
 $$
 \begin{aligned}
-s=\frac{r-r_{\min}}{r_{\max}-r_{\min}}\times255
+s=\frac{r-r_{\min}}{r_{\max}-r_{\min}}\times{(s_{\max} - s_{\min})}
 \end{aligned}
 $$
 

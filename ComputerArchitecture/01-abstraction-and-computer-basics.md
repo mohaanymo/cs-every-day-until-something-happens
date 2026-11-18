@@ -85,11 +85,9 @@ we will discuss these things in details later.
 
 # 3- Moore's Law
 
-
-
 Moore's Law is an observation made by Gordon Moore in 1965.
 
-![[Gordon_Moore.png]]
+![[Goorge_Moore.jpeg]]
 
 It states that:
 
