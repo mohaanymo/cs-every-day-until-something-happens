@@ -1,6 +1,8 @@
 #include <GLFW/glfw3.h>
+#include <fstream>
 #include <glad/gl.h>
 #include <iostream>
+#include <sstream>
 
 void processInput(GLFWwindow *window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -33,7 +35,22 @@ GLFWwindow *createWindow() {
   return window;
 }
 
+// helper function
+std::string readShaderFile(const char *filepath) {
+  std::ifstream file(filepath);
+  std::stringstream buffer;
+  buffer << file.rdbuf();
+  return buffer.str();
+}
+
 int main() {
+  // shaders
+  std::string vShader = readShaderFile("shaders/vertex.glsl");
+  std::string fShader = readShaderFile("shaders/fragment.glsl");
+
+  const char *vertexShaderSource = vShader.c_str();
+  const char *fragmentShaderSource = fShader.c_str();
+
   initializeGLFW();
   GLFWwindow *window = createWindow();
   if (window == NULL) {
@@ -41,39 +58,34 @@ int main() {
   }
   initializeGLAD();
 
-  float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
+  float vertices[] = {
+      // Position             // Color
+      // X       Y      Z     R     G     B
+      -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom-left: Red
+      0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // Bottom-right: Green
+      0.0f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f  // Top: Blue
+  };
+
   unsigned int VBO;
   glGenBuffers(1, &VBO);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
   unsigned int VAO;
   glGenVertexArrays(1, &VAO);
   glBindVertexArray(VAO);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
 
-  const char *vertexShaderSource =
-      "#version 330 core\n"
-      "layout (location = 0) in vec3 aPos;\n"
-      "void main()\n"
-      "{\n"
-      "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-      "}\0";
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+                        (void *)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
 
   unsigned int vertexShader;
   vertexShader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
   glCompileShader(vertexShader);
-
-  const char *fragmentShaderSource =
-      "#version 330 core\n"
-      "out vec4 FragColor;\n"
-      "void main()\n"
-      "{\n"
-      "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-      "}\n";
 
   unsigned int fragemntSahder;
   fragemntSahder = glCreateShader(GL_FRAGMENT_SHADER);
@@ -98,7 +110,7 @@ int main() {
   // render loop
   while (!glfwWindowShouldClose(window)) {
     processInput(window);
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     glUseProgram(shaderProgram);
